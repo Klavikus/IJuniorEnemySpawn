@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,22 +11,21 @@ public class Spawner : MonoBehaviour
 
     private float _timeFromLastSpawn;
 
+    private IEnumerator Start()
+    {
+        WaitForSeconds delay = new WaitForSeconds(_spawnDelay);
+
+        while (true)
+        {
+            RandomSpawnObject();
+            yield return delay;
+        }
+    }
+
     private void RandomSpawnObject()
     {
         int randomPointId = Random.Range(0, _spawnPoints.Length);
         Instantiate(_spawnPrefab, _spawnPoints[randomPointId].transform.position, Quaternion.identity,
             _objectContainer);
-    }
-
-    private void Update()
-    {
-        _timeFromLastSpawn += Time.deltaTime;
-
-        if (_timeFromLastSpawn < _spawnDelay)
-            return;
-
-        RandomSpawnObject();
-
-        _timeFromLastSpawn = 0;
     }
 }
